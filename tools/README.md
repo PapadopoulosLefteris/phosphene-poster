@@ -20,6 +20,12 @@ Replays the recorded messages to rebuild the scan as 3 cm cells, giving each cel
 
 Checked on 2026-11-01 against the scannav recording, it gives the same 1731 poses, 350 lines and 63,791 kept cells as the placeholder data.
 
+## phosphene_videos.py
+
+`python tools/phosphene_videos.py <phos_dir> <recording>`
+
+Turns the phosphene image sequences written by SLAMPhosphene's `services/live/tools/phosphene_replay.py` (`meta.json` plus one PNG folder per mode) into `data/phos/<recording>_<mode>.mp4`, H.264 baseline in yuv420p with the index at the front so phone browsers play it, at the sequence's own frame rate and with a keyframe every half second for quick scrubbing. Needs ffmpeg.
+
 ## make_qr.py
 
 `python tools/make_qr.py [url]`

@@ -7,7 +7,7 @@
 <meta name="description" content="Replay of a live 3D scan of a room, made with a phone in real time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <div class="wrap">
@@ -32,6 +32,7 @@
     </div>
     <div class="side">
       <div class="cam"><img id="cam" alt="The phone's camera photo at this moment"><span class="cap">Camera</span></div>
+      <div class="phos"><div class="view"><video id="phos" muted playsinline preload="auto"></video><span class="cap">Phosphenes</span></div><div class="modes" id="phos-modes" aria-label="What the phosphenes show"></div></div>
       <div class="readout" aria-live="off">
         <div><span>Time</span><b id="r-t">0.0 s</b></div>
         <div><span>Scan so far</span><b id="r-n">0 dots</b></div>
@@ -58,11 +59,12 @@
 
 <script>
 window.PAGE = {
-  start: 0, line: false, autoplay: true
+  start: 0, line: false, autoplay: true,
+  phos: { src: "data/phos/scannav", v: 1, modes: [["edges", "Edges"], ["semantic", "Objects"], ["obstacles", "Obstacles"], ["floor_checker", "Floor"]] }
 };
 </script>
-<script src="data/room.js?v=5"></script>
+<script src="data/room.js?v=6"></script>
 <script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
-<script type="module" src="viewer.js?v=5"></script>
+<script type="module" src="viewer.js?v=6"></script>
 </body>
 </html>

@@ -7,12 +7,13 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 | Part | Role |
 |------|------|
 | `index.html` | Overview page with the poster title, authors and one titled card per replay. |
-| `room.html` | Replay 1, how fast a whole room is scanned, with the phone's camera photos alongside. |
-| `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone, with the phone's camera photos alongside. |
+| `room.html` | Replay 1, how fast a whole room is scanned, with the phone's camera photos alongside and a phosphene view under them (edges, objects, obstacles or floor, chosen with buttons). |
+| `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone, with camera photos and a phosphene view that adds the path. |
 | `moving.html` | Replay 3, pushing a chair while scanning, seen over the phone's shoulder, with the phone's camera photos alongside. |
 | `viewer.js` | The one 3D replay player all three pages share (three.js point cloud, phone marker, track, line, readouts, time controls). |
 | `style.css` | Shared look, light and dark, phone and desktop layouts. |
 | `data/*.js` | One recording per page (`window.REPLAY`). Replacing a recording means replacing only this file. |
+| `data/phos/<recording>_<mode>.mp4` | Phosphene videos, one per mode, played in step with the replay. |
 | `vendor/` | Pinned copy of three.js 0.165.0 and its OrbitControls, so the site never depends on a third-party link. |
 | `img/` | Card pictures on the landing page, screenshots of each replay. |
 | `tools/` | Recorder and builder that turn a new live scan into a `data/*.js` file. See `tools/README.md`. |
@@ -29,13 +30,17 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
                                                                             │
                                                                      data/<page>.js
                                                                             │
+ <scene>_monitor.bin + finished scan ──> phosphene_replay.py (SLAMPhosphene, live container)
+                                          ──> PNG sequences ──> tools/phosphene_videos.py ──> data/phos/*.mp4
+                                                                            │
  poster QR codes ──> room.html / navigation.html / moving.html ──> viewer.js   (index.html links all three)
 ```
 
 1. During a live scan, `tools/record_scan.py` listens to the same monitor stream the viewer's Monitor page uses and saves every message with its arrival time.
 2. After the scan, `tools/build_replay.py` turns that file into one `data/<page>.js`, with the scan as 3 cm cells (each with the time spans it existed), the phone track, the path lines and, if the scan kept its frames, the camera photos.
-3. Each page loads its data file, sets a few options in `window.PAGE` (clip start, line on or off, default camera) and runs `viewer.js`.
-4. GitHub Pages serves the folder as it is. Each QR code opens its replay page directly.
+3. For the phosphene view, SLAMPhosphene's `services/live/tools/phosphene_replay.py` looks at the finished scan from the phone's pose 20 times a second, builds each mode's stimulus with the phosphene walk's own functions and steps the dynaphos simulator once per frame. `tools/phosphene_videos.py` turns those images into one video per mode.
+4. Each page loads its data file, sets a few options in `window.PAGE` (clip start, line on or off, default camera, phosphene videos and modes) and runs `viewer.js`, which keeps the phosphene video on the replay's clock.
+5. GitHub Pages serves the folder as it is. Each QR code opens its replay page directly.
 
 ## Key choices
 
@@ -46,6 +51,8 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 - One QR code per replay, each pointing at a fixed page address (`room.html`, `navigation.html`, `moving.html`), so recordings can be swapped later without reprinting the poster as long as those file names stay.
 - three.js is copied into `vendor/` instead of loaded from a CDN, so a CDN change cannot break the page years later.
 - Each recording lives in its own data file, so a final scan replaces a placeholder without touching any page code.
+- Phosphene views are videos rather than images in the data file. At the simulator's 20 frames a second a 46 s recording is 930 frames per mode, about 1 to 2 MB as video against tens of MB as separate pictures.
+- Phosphene views come from the finished scan, so parts not yet scanned at a moment can already light up. The path mode uses the line the phone really received at that moment.
 
 ## Requirements
 
@@ -56,6 +63,7 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 | Building new data | Python 3 with numpy, plus opencv-python when photos are included |
 | Recording | The SLAMPhosphene live server on 127.0.0.1:8765, and `websockets` for Python |
 | QR code | `segno` for Python |
+| Phosphene views | The SLAMPhosphene live image (dynaphos, GPU) and ffmpeg |
 
 ## Directory tree
 
@@ -85,7 +93,8 @@ All three are placeholders taken from earlier test scans.
 1. Record the new scan with `tools/record_scan.py` (start it before the scan, see `tools/README.md`). Switch on "keep frames" in the app, otherwise the camera feed cannot play at the camera's real frame rate.
 2. Build the data file, for example `python tools/build_replay.py chair_monitor.bin data/moving.js --frames <scenes>/chair/00_live/frames`.
 3. In the page, set `start` in `window.PAGE` to where the clip should begin.
-4. Retake the card picture in `img/` (a screenshot of the replay), raise the `?v=` number in every page, then commit and push. The QR codes stay the same.
+4. Make the phosphene videos, `phosphene_replay.py` in the live container then `python tools/phosphene_videos.py <out> <recording>`, and point `phos.src` in the page at them.
+5. Retake the card picture in `img/` (a screenshot of the replay), raise the `?v=` number in every page, then commit and push. The QR codes stay the same.
 
 ## Documentation maintenance
 

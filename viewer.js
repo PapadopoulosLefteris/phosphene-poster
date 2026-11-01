@@ -6,7 +6,9 @@
 //         line: draw the path line the server sent to the phone (default false),
 //         autoplay: start playing once the scan is loaded (default true),
 //         view: "fit" frames the whole finished scan from above (default), "phone" looks over the phone's shoulder at the clip start,
-//         foot: optional (REPLAY, facts) => text for an element with id foot }
+//         foot: optional (REPLAY, facts) => text for an element with id foot,
+//         phos: optional { src: "data/phos/<recording>", modes: [[mode, button label], ...] }, phosphene videos
+//               <src>_<mode>.mp4 (tools/phosphene_videos.py) shown in the #phos panel in step with the replay }
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -200,13 +202,44 @@ function show(t) {
     if (k !== camIdx) { camIdx = k; $("cam").src = "data:image/jpeg;base64," + PH[k][1]; }
   }
   put("clock", `${(cur - T0).toFixed(1)} / ${(T1 - T0).toFixed(1)} s`);
+  syncPhos();
   $("scrub").value = Math.round((cur - T0) / (T1 - T0) * 1000);
+}
+
+// phosphene view: one video per mode, frame k at k / fps s of the recording; kept in step with the replay clock
+const PV = $("phos");
+if (PV && !P.phos) PV.closest(".phos").hidden = true;
+if (PV && P.phos) {
+  const box = $("phos-modes");
+  P.phos.modes.forEach(([mode, label], i) => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.dataset.mode = mode;
+    b.addEventListener("click", () => setMode(mode));
+    box.appendChild(b);
+  });
+  setMode(P.phos.modes[0][0]);
+}
+function setMode(mode) {
+  for (const b of $("phos-modes").children) b.setAttribute("aria-pressed", b.dataset.mode === mode);
+  PV.src = `${P.phos.src}_${mode}.mp4?v=${P.phos.v || 1}`;
+  PV.addEventListener("loadedmetadata", () => { PV.currentTime = cur; syncPhos(); }, { once: true });
+}
+function syncPhos() {
+  if (!PV || !P.phos || PV.readyState < 1) return;
+  const want = Math.min(cur, PV.duration || cur);
+  if (playing) {
+    PV.playbackRate = +$("rate").value;
+    if (PV.paused) PV.play().catch(() => {});
+    if (Math.abs(PV.currentTime - want) > 0.25) PV.currentTime = want;
+  } else {
+    if (!PV.paused) PV.pause();
+    if (Math.abs(PV.currentTime - want) > 0.03) PV.currentTime = want;
+  }
 }
 function loop(now) {
   if (!playing) return;
   const dt = last ? (now - last) / 1000 : 0; last = now;
   const next = cur + dt * +$("rate").value;
-  if (next > T1) { show(T1); playing = false; put("play", "Play again"); return; }
+  if (next > T1) { playing = false; show(T1); put("play", "Play again"); return; }
   show(next);
   requestAnimationFrame(loop);
 }
@@ -214,7 +247,7 @@ function play() {
   if (cur >= T1) cur = T0;
   playing = true; last = 0; put("play", "Pause"); requestAnimationFrame(loop);
 }
-$("play").addEventListener("click", () => { if (playing) { playing = false; put("play", "Play"); } else play(); });
+$("play").addEventListener("click", () => { if (playing) { playing = false; put("play", "Play"); syncPhos(); } else play(); });
 $("scrub").addEventListener("input", e => { playing = false; put("play", "Play"); show(T0 + (T1 - T0) * e.target.value / 1000); });
 $("follow").addEventListener("change", () => { prevW = null; show(cur); });
 $("final").addEventListener("change", e => { uAll.value = e.target.checked ? 1 : 0; render(); });
