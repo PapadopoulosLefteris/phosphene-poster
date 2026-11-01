@@ -80,12 +80,12 @@ phosphene-poster/
 
 ## Current recordings
 
-All three are placeholders taken from earlier test scans.
+Room is the final recording. Navigation and moving are still placeholders taken from earlier test scans.
 
 | Page | Placeholder source |
 |------|--------------------|
-| `room.html` | scannav, 29 Oct 2026 (the same recording as replay 2, with the line hidden). Only its 109 keyframe photos were saved, so the camera feed runs at about 2 a second instead of the real 30. |
-| `navigation.html` | scannav, 29 Oct 2026, 350 path lines, same 109 keyframe photos |
+| `room.html` | Final recording, scan a, 1 Nov 2026, iPhone over the internet link, 52.5 s. All 1183 camera frames that reached the server (about 23 a second), phosphene videos `data/phos/a_*.mp4`. |
+| `navigation.html` | scannav, 29 Oct 2026, 350 path lines. Only its 109 keyframe photos were saved, so the camera feed runs at about 2 a second instead of the real 30. |
 | `moving.html` | handart2, 29 Oct 2026, the last 6 s, rebuilt after the scan with DepthART. All 487 camera frames, the real 30 a second. |
 
 ## Replacing a placeholder
