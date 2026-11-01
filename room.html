@@ -7,7 +7,7 @@
 <meta name="description" content="Replay of a live 3D scan of a room, made with a phone in real time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <div class="wrap">
@@ -61,11 +61,11 @@
 window.PAGE = {
   start: 0, line: false, autoplay: true,
   camVideo: "data/cam/nav.mp4",
-  phos: { src: "data/phos/nav", v: 2, modes: [["edges", "Edges"], ["semantic", "Objects"], ["obstacles", "Obstacles"], ["floor_checker", "Floor"]] }
+  phos: { src: "data/phos/nav", v: 3, modes: [["edges", "Edges"], ["semantic", "Objects"], ["obstacles", "Obstacles"], ["floor_checker", "Floor"]] }
 };
 </script>
-<script src="data/room.js?v=17"></script>
+<script src="data/room.js?v=18"></script>
 <script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
-<script type="module" src="viewer.js?v=17"></script>
+<script type="module" src="viewer.js?v=18"></script>
 </body>
 </html>
