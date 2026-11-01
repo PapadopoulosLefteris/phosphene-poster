@@ -76,13 +76,13 @@ All three are placeholders taken from earlier test scans.
 
 | Page | Placeholder source |
 |------|--------------------|
-| `room.html` | scannav, 29 Oct 2026 (the same recording as replay 2, with the line hidden), photos from its 109 keyframes |
-| `navigation.html` | scannav, 29 Oct 2026, 350 path lines, photos from its 109 keyframes |
-| `moving.html` | handart2, 29 Oct 2026, the last 6 s, rebuilt after the scan with DepthART |
+| `room.html` | scannav, 29 Oct 2026 (the same recording as replay 2, with the line hidden). Only its 109 keyframe photos were saved, so the camera feed runs at about 2 a second instead of the real 30. |
+| `navigation.html` | scannav, 29 Oct 2026, 350 path lines, same 109 keyframe photos |
+| `moving.html` | handart2, 29 Oct 2026, the last 6 s, rebuilt after the scan with DepthART. All 487 camera frames, the real 30 a second. |
 
 ## Replacing a placeholder
 
-1. Record the new scan with `tools/record_scan.py` (start it before the scan, see `tools/README.md`). Switch on "keep frames" in the app if the page should show camera photos.
+1. Record the new scan with `tools/record_scan.py` (start it before the scan, see `tools/README.md`). Switch on "keep frames" in the app, otherwise the camera feed cannot play at the camera's real frame rate.
 2. Build the data file, for example `python tools/build_replay.py chair_monitor.bin data/moving.js --frames <scenes>/chair/00_live/frames`.
 3. In the page, set `start` in `window.PAGE` to where the clip should begin.
 4. Retake the card picture in `img/` (a screenshot of the replay), raise the `?v=` number in every page, then commit and push. The QR codes stay the same.

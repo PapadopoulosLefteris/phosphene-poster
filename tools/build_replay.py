@@ -1,6 +1,6 @@
 """Turn one recorded live scan into a replay data file for the site.
 
-    python tools/build_replay.py <scene>_monitor.bin data/room.js [--frames <scene>/00_live/frames] [--every 2]
+    python tools/build_replay.py <scene>_monitor.bin data/room.js [--frames <scene>/00_live/frames]
 
 Input is the file tools/record_scan.py writes while the scan runs (every message of
 the live server's /ws/monitor/<scene> stream with its arrival time). Output is
@@ -13,7 +13,7 @@ the live server's /ws/monitor/<scene> stream with its arrival time). Output is
   view       [x0, x1, z0, z1] floor rectangle of the finished scan
   frames     [t, x, z, yaw degrees, phone height y] per phone pose
   lines      [t, status, [[x, y, z], ...]] every path line the server sent (ok, blocked, no_floor)
-  photos     [t, base64 jpeg] every Nth camera photo (--every), 240 x 320, only with --frames
+  photos     [t, base64 jpeg] every camera photo the phone sent (real frame rate), 240 x 320, only with --frames
   body_r     radius of the walker disc
 
 A cell gets one on-interval for every stretch of time it had a surface, so things
@@ -42,7 +42,7 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--frames", help="folder of the scan's kept camera photos (<scene>/00_live/frames)")
     ap.add_argument("--rotate", type=int, default=90, help="clockwise rotation for the photos (0 or 90)")
-    ap.add_argument("--every", type=int, default=2, help="use every Nth photo (2 for 00_live/frames, 1 for the sparser 00_live/keyframes)")
+    ap.add_argument("--every", type=int, default=1, help="use every Nth photo; keep 1 so the feed plays at the camera's real frame rate")
     a = ap.parse_args()
 
     id_vox, cnt, on_since, col, iv = {}, {}, {}, {}, []
