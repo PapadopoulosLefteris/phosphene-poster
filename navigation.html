@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navigation While Scanning</title>
+<meta name="description" content="Replay of a live 3D scan with the walking line the computer planned and sent to the phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">&larr; All three replays</a>
+    <div class="eyebrow">2 of 3 &middot; Real-time navigation</div>
+    <h1>The walking line, planned while the room is still being scanned</h1>
+    <p class="lede">The same kind of live scan, now with navigation switched on. Several times a second the computer plans a walking line ahead of the person, through the part of the room it has scanned so far, and sends it back to the phone. Green means the way ahead is clear. Orange means something is in the way and the line stops short of it.</p>
+    <div><span class="tag" id="placeholder">Placeholder recording, to be replaced with the final scan</span></div>
+  </header>
+
+  <section class="bench" aria-label="Replay">
+    <div class="map">
+      <div class="stage">
+        <canvas id="map" aria-label="3D view of the scan growing, with the phone's track and the walking line sent to it; drag to turn, scroll or pinch to zoom"></canvas>
+        <div class="loading" id="loading">Loading the scan</div>
+      </div>
+      <div class="legend">
+        <span>Scan in its photo colours</span>
+        <span><i class="sw" style="background:#ff2bd6"></i>Phone and camera view</span>
+        <span><i class="sw" style="background:#39ff14"></i>Line, way clear</span>
+        <span><i class="sw" style="background:#ff8a00"></i>Line, cut short</span>
+        <span><i class="sw" style="background:#ffe600"></i>Track</span>
+        <span class="hint" id="hint">Drag to turn, right-drag to move, scroll to zoom</span>
+        <button id="view-reset" type="button">Reset view</button>
+      </div>
+    </div>
+    <div class="side">
+      <div class="cam"><img id="cam" alt="The phone's camera photo at this moment"><span class="cap">Camera</span></div>
+      <div class="readout" aria-live="off">
+        <div><span>Time</span><b id="r-t">0.0 s</b></div>
+        <div><span>Scan so far</span><b id="r-n">0 dots</b></div>
+        <div><span>Walked</span><b id="r-d">0.0 m</b></div>
+        <div><span>Line</span><b id="r-s">-</b></div>
+        <div><span>Line length</span><b id="r-l">-</b></div>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="follow"> Follow the phone</label>
+        <label><input type="checkbox" id="final"> Show the finished scan underneath</label>
+      </div>
+    </div>
+  </section>
+
+  <div class="transport">
+    <button id="play" type="button">Play</button>
+    <select id="rate" aria-label="Playback speed">
+      <option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option><option value="4">4x</option>
+    </select>
+    <div class="scrub"><div class="ticks" id="ticks"></div><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Position in the scan"></div>
+    <span class="clock" id="clock">0.0 / 0.0 s</span>
+  </div>
+  <p class="note" id="foot"></p>
+  <nav class="next" aria-label="Other replays"><a href="room.html">&larr; 1. Scanning a room</a><a href="moving.html">3. Moving objects &rarr;</a></nav>
+</div>
+
+<script>
+window.PAGE = {
+  start: 0, line: true, autoplay: true,
+  foot: (D, x) => {
+    const n = { ok: 0, blocked: 0, no_floor: 0 }; D.lines.forEach(l => n[l[1]] = (n[l[1]] || 0) + 1);
+    return `Recorded from the live server's stream, the same messages its own monitor page receives. ${x.frames} phone positions and ${x.lines} walking lines over ${x.seconds.toFixed(1)} s (${(x.lines / x.seconds).toFixed(1)} a second), ${n.ok} with the way clear, ${n.blocked} cut short by something in the way and ${n.no_floor} with no floor in view yet. Amber marks over the timeline show where the line started being cut short. The model is shown in 3 cm cells, each appearing when the server first had a surface there.`;
+  }
+};
+</script>
+<script src="data/navigation.js"></script>
+<script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
+<script type="module" src="viewer.js"></script>
+</body>
+</html>
