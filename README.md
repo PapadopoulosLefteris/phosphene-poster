@@ -6,12 +6,12 @@ A small public website behind the QR code on the SLAMPhosphene poster ("From liv
 
 | Part | Role |
 |------|------|
-| `index.html` | Landing page the QR code opens. Title, authors and three cards, one per replay. |
-| `room.html` | Replay 1, how fast a whole room is scanned. Big numbers (time, distance, area) over the replay. |
+| `index.html` | Landing page the QR code opens. Three scan pictures, each linking to its replay, no text. |
+| `room.html` | Replay 1, how fast a whole room is scanned. |
 | `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone. |
-| `moving.html` | Replay 3, pushing a chair while scanning, with the phone's camera photos alongside. |
-| `viewer.js` | The one 3D replay player all three pages share (three.js point cloud, phone marker, track, line, time controls). |
-| `style.css` | Shared look, light and dark, phone and desktop layouts. |
+| `moving.html` | Replay 3, pushing a chair while scanning, seen over the phone's shoulder with its camera photo as an inset. |
+| `viewer.js` | The one full-screen 3D replay player all three pages share (three.js point cloud, phone marker, track, line, play button and time slider). |
+| `style.css` | Shared look for phone and desktop. |
 | `data/*.js` | One recording per page (`window.REPLAY`). Replacing a recording means replacing only this file. |
 | `vendor/` | Pinned copy of three.js 0.165.0 and its OrbitControls, so the site never depends on a third-party link. |
 | `img/` | Card pictures on the landing page, screenshots of each replay. |
@@ -39,6 +39,7 @@ A small public website behind the QR code on the SLAMPhosphene poster ("From liv
 
 ## Key choices
 
+- No visible text anywhere, by the user's request. The pages show only the scans, with icon buttons (back, reset view, play or pause) and a time slider.
 - Static files on GitHub Pages rather than a claude.ai artifact or our own server, because the link must keep working at every future poster session without anyone being logged in or anything running.
 - A separate public repository, because the SLAMPhosphene code repository is private.
 - The QR code points at the landing page only, so replays can be swapped or added later without reprinting the poster.
@@ -70,7 +71,7 @@ phosphene-poster/
 
 ## Current recordings
 
-All three are placeholders taken from earlier test scans, each marked on its page with a "Placeholder recording" tag.
+All three are placeholders taken from earlier test scans.
 
 | Page | Placeholder source |
 |------|--------------------|
@@ -82,8 +83,8 @@ All three are placeholders taken from earlier test scans, each marked on its pag
 
 1. Record the new scan with `tools/record_scan.py` (start it before the scan, see `tools/README.md`). Switch on "keep frames" in the app if the page should show camera photos.
 2. Build the data file, for example `python tools/build_replay.py chair_monitor.bin data/moving.js --frames <scenes>/chair/00_live/frames`.
-3. In the page, set `start` in `window.PAGE` to where the clip should begin, and delete the `<span class="tag" id="placeholder">` line.
-4. Update the texts if the numbers they mention changed, retake the card picture in `img/`, then commit and push. The QR code stays the same.
+3. In the page, set `start` in `window.PAGE` to where the clip should begin.
+4. Retake the card picture in `img/` (a screenshot of the replay, 4 by 3), then commit and push. The QR code stays the same.
 
 ## Documentation maintenance
 
