@@ -14,6 +14,7 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 | `style.css` | Shared look, light and dark, phone and desktop layouts. |
 | `data/*.js` | One recording per page (`window.REPLAY`). Replacing a recording means replacing only this file. |
 | `data/phos/<recording>_<mode>.mp4` | Phosphene videos, one per mode, played in step with the replay. |
+| `data/cam/<recording>.mp4` | Camera feed as a video, for recordings with too many frames to ship as photos (`PAGE.camVideo`). |
 | `vendor/` | Pinned copy of three.js 0.165.0 and its OrbitControls, so the site never depends on a third-party link. |
 | `img/` | Card pictures on the landing page, screenshots of each replay. |
 | `tools/` | Recorder and builder that turn a new live scan into a `data/*.js` file. See `tools/README.md`. |
@@ -36,7 +37,7 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
  poster QR codes ──> room.html / navigation.html / moving.html ──> viewer.js   (index.html links all three)
 ```
 
-1. During a live scan, `tools/record_scan.py` listens to the same monitor stream the viewer's Monitor page uses and saves every message with its arrival time.
+1. The scan runs with the server option "keep frames" (every frame, its pose and depth, and `timeline.jsonl`). Afterwards SLAMPhosphene's `services/live/tools/rebuild_monitor.py` feeds those frames through the server's own TSDF code, fusing the frames the scan fused, and plans the walking line on the scan's clock, writing a recording in the format below. `tools/record_scan.py` (listening to the monitor stream during the scan) gives the same file but made the server skip frames and the Monitor lag, so it is no longer used during scans.
 2. After the scan, `tools/build_replay.py` turns that file into one `data/<page>.js`, with the scan as 3 cm cells (each with the time spans it existed), the phone track, the path lines and, if the scan kept its frames, the camera photos.
 3. For the phosphene view, SLAMPhosphene's `services/live/tools/phosphene_replay.py` looks at the finished scan from the phone's pose 20 times a second, builds each mode's stimulus with the phosphene walk's own functions and steps the dynaphos simulator once per frame. `tools/phosphene_videos.py` turns those images into one video per mode.
 4. Each page loads its data file, sets a few options in `window.PAGE` (clip start, line on or off, default camera, phosphene videos and modes) and runs `viewer.js`, which keeps the phosphene video on the replay's clock.
@@ -80,12 +81,12 @@ phosphene-poster/
 
 ## Current recordings
 
-Room and moving are final recordings. Navigation is still a placeholder taken from an earlier test scan.
+All three are final recordings.
 
 | Page | Placeholder source |
 |------|--------------------|
 | `room.html` | Final recording, scan a, 1 Nov 2026, iPhone over the internet link, 52.5 s. All 1183 camera frames that reached the server (about 23 a second), phosphene videos `data/phos/a_*.mp4`. |
-| `navigation.html` | scannav, 29 Oct 2026, 350 path lines. Only its 109 keyframe photos were saved, so the camera feed runs at about 2 a second instead of the real 30. |
+| `navigation.html` | Final recording, scan nav, 1 Nov 2026, iPhone over the USB cable, 52.2 s, 2982 frames (about 57 a second). Rebuilt afterwards from the kept frames with `rebuild_monitor.py`, walking line replanned for a 20 cm wide person (469 lines). Camera feed as a 60 fps video `data/cam/nav.mp4`. |
 | `moving.html` | Final recording, scan chair, 1 Nov 2026, iPhone over the USB cable, 12.2 s, the chair pushed across the room. All 387 camera frames that reached the server (about 32 a second). |
 
 ## Replacing a placeholder

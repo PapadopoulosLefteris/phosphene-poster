@@ -8,7 +8,9 @@
 //         view: "fit" frames the whole finished scan from above (default), "phone" looks over the phone's shoulder at the clip start,
 //         foot: optional (REPLAY, facts) => text for an element with id foot,
 //         phos: optional { src: "data/phos/<recording>", modes: [[mode, button label], ...] }, phosphene videos
-//               <src>_<mode>.mp4 (tools/phosphene_videos.py) shown in the #phos panel in step with the replay }
+//               <src>_<mode>.mp4 (tools/phosphene_videos.py) shown in the #phos panel in step with the replay,
+//         camVideo: optional "data/cam/<recording>.mp4" (tools/camera_video.py), the camera feed as a video instead of
+//               REPLAY.photos, for recordings with too many frames to ship as pictures }
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -25,7 +27,10 @@ for (let i = 1; i < F.length; i++) dist.push(dist[i - 1] + Math.hypot(F[i][1] - 
 const [X0, X1, Z0, Z1] = D.view;
 const COL = { person: "#ff2bd6", ok: "#39ff14", short: "#ff8a00", track: "#ffe600", edge: "#000000" };
 
-if ($("cam") && !PH.length) $("cam").parentElement.hidden = true;
+const CV = $("camv");
+if (P.camVideo && CV) { CV.src = `${P.camVideo}?v=${P.camV || 1}`; CV.hidden = false; $("cam").hidden = true;
+  CV.addEventListener("loadedmetadata", () => syncVideos(), { once: true }); }
+else if ($("cam") && !PH.length) $("cam").parentElement.hidden = true;
 if (matchMedia("(pointer: coarse)").matches) put("hint", "Drag to turn, pinch to zoom, two fingers to move");
 
 const cv = $("map");
@@ -202,7 +207,7 @@ function show(t) {
     if (k !== camIdx) { camIdx = k; $("cam").src = "data:image/jpeg;base64," + PH[k][1]; }
   }
   put("clock", `${(cur - T0).toFixed(1)} / ${(T1 - T0).toFixed(1)} s`);
-  syncPhos();
+  syncVideos();
   $("scrub").value = Math.round((cur - T0) / (T1 - T0) * 1000);
 }
 
@@ -221,18 +226,21 @@ if (PV && P.phos) {
 function setMode(mode) {
   for (const b of $("phos-modes").children) b.setAttribute("aria-pressed", b.dataset.mode === mode);
   PV.src = `${P.phos.src}_${mode}.mp4?v=${P.phos.v || 1}`;
-  PV.addEventListener("loadedmetadata", () => { PV.currentTime = cur; syncPhos(); }, { once: true });
+  PV.addEventListener("loadedmetadata", () => { PV.currentTime = cur; syncVideos(); }, { once: true });
 }
-function syncPhos() {
-  if (!PV || !P.phos || PV.readyState < 1) return;
-  const want = Math.min(cur, PV.duration || cur);
-  if (playing) {
-    PV.playbackRate = +$("rate").value;
-    if (PV.paused) PV.play().catch(() => {});
-    if (Math.abs(PV.currentTime - want) > 0.25) PV.currentTime = want;
-  } else {
-    if (!PV.paused) PV.pause();
-    if (Math.abs(PV.currentTime - want) > 0.03) PV.currentTime = want;
+// keeps the camera and phosphene videos on the replay clock (their time 0 is the recording's first pose)
+function syncVideos() {
+  for (const v of [P.phos ? PV : null, P.camVideo ? CV : null]) {
+    if (!v || v.readyState < 1) continue;
+    const want = Math.min(cur, v.duration || cur);
+    if (playing) {
+      v.playbackRate = +$("rate").value;
+      if (v.paused) v.play().catch(() => {});
+      if (Math.abs(v.currentTime - want) > 0.25) v.currentTime = want;
+    } else {
+      if (!v.paused) v.pause();
+      if (Math.abs(v.currentTime - want) > 0.03) v.currentTime = want;
+    }
   }
 }
 function loop(now) {
@@ -246,7 +254,7 @@ function play() {
   if (cur >= T1) cur = T0;
   playing = true; last = 0; put("play", "Pause"); requestAnimationFrame(loop);
 }
-$("play").addEventListener("click", () => { if (playing) { playing = false; put("play", "Play"); syncPhos(); } else play(); });
+$("play").addEventListener("click", () => { if (playing) { playing = false; put("play", "Play"); syncVideos(); } else play(); });
 $("scrub").addEventListener("input", e => { playing = false; put("play", "Play"); show(T0 + (T1 - T0) * e.target.value / 1000); });
 $("follow").addEventListener("change", () => { prevW = null; show(cur); });
 $("final").addEventListener("change", e => { uAll.value = e.target.checked ? 1 : 0; render(); });

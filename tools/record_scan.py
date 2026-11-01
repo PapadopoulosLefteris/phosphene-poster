@@ -11,7 +11,7 @@ import asyncio, json, struct, sys, time, urllib.request
 from pathlib import Path
 import websockets
 
-LIVE = "127.0.0.1:8765"
+LIVE = sys.argv[2] if len(sys.argv) > 2 else "127.0.0.1:8765"
 out_dir = Path(sys.argv[1])
 
 

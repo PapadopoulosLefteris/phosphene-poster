@@ -7,7 +7,7 @@
 <meta name="description" content="Replay of a 3D scan in which a chair is pushed away, with the model following the movement.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <div class="wrap">
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="side">
-      <div class="cam"><img id="cam" alt="The phone's camera photo at this moment"><span class="cap">Camera</span></div>
+      <div class="cam"><img id="cam" alt="The phone's camera photo at this moment"><video id="camv" muted playsinline preload="auto" hidden></video><span class="cap">Camera</span></div>
       <div class="readout" aria-live="off">
         <div><span>Time</span><b id="r-t">0.0 s</b></div>
         <div><span>Scan now</span><b id="r-n">0 dots</b></div>
@@ -60,8 +60,8 @@ window.PAGE = {
   start: 0, line: false, autoplay: true, view: "phone"
 };
 </script>
-<script src="data/moving.js?v=10"></script>
+<script src="data/moving.js?v=11"></script>
 <script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
-<script type="module" src="viewer.js?v=10"></script>
+<script type="module" src="viewer.js?v=11"></script>
 </body>
 </html>
