@@ -7,7 +7,7 @@
 <meta name="description" content="Replay of a 3D scan in which a chair is pushed away, with the model following the movement.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 <div class="wrap">
@@ -25,7 +25,6 @@
       <div class="legend">
         <span>Scan in its photo colours</span>
         <span><i class="sw" style="background:#ff2bd6"></i>Phone and camera view</span>
-        <span><i class="sw" style="background:#ffe600"></i>Track</span>
         <button id="view-reset" type="button">Reset view</button>
       </div>
     </div>
@@ -57,11 +56,11 @@
 
 <script>
 window.PAGE = {
-  start: 0, line: false, autoplay: true, view: "phone"
+  start: 0, line: false, autoplay: true, view: "phone", track: false
 };
 </script>
-<script src="data/moving.js?v=15"></script>
+<script src="data/moving.js?v=16"></script>
 <script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
-<script type="module" src="viewer.js?v=15"></script>
+<script type="module" src="viewer.js?v=16"></script>
 </body>
 </html>

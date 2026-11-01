@@ -5,6 +5,7 @@
 // PAGE: { start: seconds to begin the clip at (default 0),
 //         line: draw the path line the server sent to the phone (default false),
 //         autoplay: start playing once the scan is loaded and loop until paused (default true),
+//         track: false hides the yellow track of the phone on the floor (default shown),
 //         dot: how many 3 cm cells wide each scan dot is drawn (default 1.2, just enough for neighbouring cells to meet),
 //         view: "fit" frames the whole finished scan from above (default), "phone" looks over the phone's shoulder at the clip start,
 //         foot: optional (REPLAY, facts) => text for an element with id foot,
@@ -139,6 +140,8 @@ trackGeom.setAttribute("position", new THREE.BufferAttribute(strip(trackPts, 0.0
 trackEdge.setAttribute("position", new THREE.BufferAttribute(strip(trackPts, 0.11, 0.05), 3));
 onTop(new THREE.Mesh(trackEdge, edgeMat), 4);
 onTop(new THREE.Mesh(trackGeom, flat(COL.track)), 6);
+if (P.track === false)                    // no yellow track on this page: empty the strips, the lines above stay as they are
+  for (const g of [trackGeom, trackEdge]) g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(0), 3));
 
 const lineGeom = new THREE.BufferGeometry(), lineEdge = new THREE.BufferGeometry(), lineMat = flat(COL.ok);
 onTop(new THREE.Mesh(lineEdge, edgeMat), 3);
