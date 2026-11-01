@@ -52,16 +52,19 @@ function resetView() {
   } else {
     const c = box.getCenter(new THREE.Vector3()), r = box.getSize(new THREE.Vector3()).length() / 2;
     const half = Math.min(camera.fov / 2, THREE.MathUtils.radToDeg(Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect)));
-    const d = r / Math.sin(THREE.MathUtils.degToRad(half));
+    const d = r / Math.sin(THREE.MathUtils.degToRad(half)) * (PHONE.matches ? 0.75 : 1);   // closer on a phone's small view
     controls.target.copy(c);
     camera.position.copy(c).add(new THREE.Vector3(0, 0.8, 0.6).multiplyScalar(d));
   }
   controls.update(); render();
 }
+// phones: one screen, the 3D view takes whatever height the layout leaves it (style.css), no scrolling
+const PHONE = matchMedia("(max-width: 820px)");
 function size() {
-  const w = cv.parentElement.clientWidth || 760, h = Math.round(Math.max(300, Math.min(w * 0.8, 720)));
+  const w = cv.parentElement.clientWidth || 760;
+  const h = PHONE.matches ? Math.max(160, cv.parentElement.clientHeight) : Math.round(Math.max(300, Math.min(w * 0.8, 720)));
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.setSize(w, h, false);
-  cv.style.height = h + "px";
+  cv.style.height = PHONE.matches ? "100%" : h + "px";
   camera.aspect = w / h; camera.updateProjectionMatrix();
 }
 

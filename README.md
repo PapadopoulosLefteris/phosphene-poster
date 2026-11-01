@@ -11,7 +11,7 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 | `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone, with camera photos and a phosphene view that adds the path. |
 | `moving.html` | Replay 3, pushing a chair while scanning, seen over the phone's shoulder, with the phone's camera photos alongside. |
 | `viewer.js` | The one 3D replay player all three pages share (three.js point cloud, phone marker, track, line, readouts, time controls). |
-| `style.css` | Shared look, light and dark, phone and desktop layouts. |
+| `style.css` | Shared look, light and dark. On phones (820 px wide or less) each replay fits one screen with no scrolling: title row, 3D view, camera and phosphenes side by side, then play, time slider and clock; legend, readouts, options and links are hidden. |
 | `data/*.js` | One recording per page (`window.REPLAY`). Replacing a recording means replacing only this file. |
 | `data/phos/<recording>_<mode>.mp4` | Phosphene videos, one per mode, played in step with the replay. |
 | `data/cam/<recording>.mp4` | Camera feed as a video, for recordings with too many frames to ship as photos (`PAGE.camVideo`). |
