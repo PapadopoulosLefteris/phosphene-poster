@@ -5,6 +5,7 @@
 // PAGE: { start: seconds to begin the clip at (default 0),
 //         line: draw the path line the server sent to the phone (default false),
 //         autoplay: start playing once the scan is loaded and loop until paused (default true),
+//         dot: how many 3 cm cells wide each scan dot is drawn (default 1.6, so neighbouring cells overlap),
 //         view: "fit" frames the whole finished scan from above (default), "phone" looks over the phone's shoulder at the clip start,
 //         foot: optional (REPLAY, facts) => text for an element with id foot,
 //         phos: optional { src: "data/phos/<recording>", modes: [[mode, button label], ...] }, phosphene videos
@@ -14,7 +15,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-const D = window.REPLAY, P = Object.assign({ start: 0, line: false, autoplay: true }, window.PAGE || {});
+const D = window.REPLAY, P = Object.assign({ start: 0, line: false, autoplay: true, dot: 1.6 }, window.PAGE || {});
 const F = D.frames, L = P.line ? (D.lines || []) : [], FY = D.floor_y, PH = D.photos || [];
 const $ = id => document.getElementById(id);
 const lastAtOrBefore = (arr, t) => { let lo = -1, hi = arr.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (arr[m][0] <= t) lo = m; else hi = m - 1; } return lo; };
@@ -86,7 +87,10 @@ async function loadCloud() {
   g.setAttribute("color", new THREE.BufferAttribute(rgb, 3, true));
   g.setAttribute("tOn", new THREE.BufferAttribute(tOn, 1));
   g.setAttribute("tOff", new THREE.BufferAttribute(tOff, 1));
-  const mat = new THREE.PointsMaterial({ size: 0.045, sizeAttenuation: true, vertexColors: true });
+  // three.js draws an attenuated point size * (canvas height / 2) / depth pixels, ignoring the fov, so a dot
+  // covers size * tan(fov / 2) of world; sized here to cover P.dot cells, so the 3 cm cells close without gaps
+  const mat = new THREE.PointsMaterial({ size: D.vox * P.dot / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)),
+                                         sizeAttenuation: true, vertexColors: true });
   mat.onBeforeCompile = sh => {
     sh.uniforms.uT = uT; sh.uniforms.uAll = uAll;
     sh.vertexShader = "attribute float tOn; attribute float tOff; uniform float uT; uniform float uAll; varying float vFaint;\n" +
