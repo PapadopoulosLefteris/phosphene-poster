@@ -14,9 +14,9 @@ File layout per message is float64 seconds since the session opened, uint8 kind 
 
 ## build_replay.py
 
-`python tools/build_replay.py <scene>_monitor.bin data/<page>.js [--frames <scene>/00_live/frames] [--rotate 0|90]`
+`python tools/build_replay.py <scene>_monitor.bin data/<page>.js [--frames <scene>/00_live/frames] [--every N] [--rotate 0|90]`
 
-Replays the recorded messages to rebuild the scan as 3 cm cells, giving each cell one time span for every stretch it had a surface (so moving things appear and vanish), and writes `window.REPLAY` for `viewer.js`. The path lines come straight from the recording, so they are exactly what the phone received. With `--frames` it adds every second camera photo, timed by the frame numbers the poses carried. The live server only saves those photos when the scan ran with "keep frames" on. `--rotate 90` (default) turns the landscape photos upright. The data format is in the script's docstring. Depends on numpy, and on opencv-python with `--frames`.
+Replays the recorded messages to rebuild the scan as 3 cm cells, giving each cell one time span for every stretch it had a surface (so moving things appear and vanish), and writes `window.REPLAY` for `viewer.js`. The path lines come straight from the recording, so they are exactly what the phone received. With `--frames` it adds every Nth camera photo (`--every`, default 2), timed by the frame numbers the poses carried. The live server saves every photo in `00_live/frames` only when the scan ran with "keep frames" on. Without it, point `--frames` at `00_live/keyframes` with `--every 1` (about two photos a second). `--rotate 90` (default) turns the landscape photos upright. The data format is in the script's docstring. Depends on numpy, and on opencv-python with `--frames`.
 
 Checked on 2026-11-01 against the scannav recording, it gives the same 1731 poses, 350 lines and 63,791 kept cells as the placeholder data.
 

@@ -7,8 +7,8 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 | Part | Role |
 |------|------|
 | `index.html` | Overview page with the poster title, authors and one titled card per replay. |
-| `room.html` | Replay 1, how fast a whole room is scanned, with tiles for scan time, distance walked, area and size. |
-| `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone. |
+| `room.html` | Replay 1, how fast a whole room is scanned, with the phone's camera photos alongside. |
+| `navigation.html` | Replay 2, the scan with the walking line the server sent to the phone, with the phone's camera photos alongside. |
 | `moving.html` | Replay 3, pushing a chair while scanning, seen over the phone's shoulder, with the phone's camera photos alongside. |
 | `viewer.js` | The one 3D replay player all three pages share (three.js point cloud, phone marker, track, line, readouts, time controls). |
 | `style.css` | Shared look, light and dark, phone and desktop layouts. |
@@ -39,7 +39,7 @@ A small public website behind the three QR codes on the SLAMPhosphene poster ("F
 
 ## Key choices
 
-- No explanatory paragraphs, by the user's request. Pages keep titles, the colour legend, the time and distance readouts and the controls.
+- No explanatory paragraphs and no summary number tiles, by the user's request. Pages keep titles, the colour legend, the readouts beside the scan, the camera photo and the controls.
 - Every page links its stylesheet, script and data with a `?v=` number. Raise it in all pages after changing `style.css`, `viewer.js`, a data file or a card picture, because GitHub Pages lets browsers keep old copies for 10 minutes and a new page with an old script shows nothing.
 - Static files on GitHub Pages rather than a claude.ai artifact or our own server, because the link must keep working at every future poster session without anyone being logged in or anything running.
 - A separate public repository, because the SLAMPhosphene code repository is private.
@@ -76,8 +76,8 @@ All three are placeholders taken from earlier test scans.
 
 | Page | Placeholder source |
 |------|--------------------|
-| `room.html` | scannav, 29 Oct 2026 (the same recording as replay 2, with the line hidden) |
-| `navigation.html` | scannav, 29 Oct 2026, 350 path lines |
+| `room.html` | scannav, 29 Oct 2026 (the same recording as replay 2, with the line hidden), photos from its 109 keyframes |
+| `navigation.html` | scannav, 29 Oct 2026, 350 path lines, photos from its 109 keyframes |
 | `moving.html` | handart2, 29 Oct 2026, the last 6 s, rebuilt after the scan with DepthART |
 
 ## Replacing a placeholder
