@@ -85,7 +85,7 @@ All three are final recordings.
 
 | Page | Placeholder source |
 |------|--------------------|
-| `room.html` | Final recording, scan a, 1 Nov 2026, iPhone over the internet link, 52.5 s. All 1183 camera frames that reached the server (about 23 a second), phosphene videos `data/phos/a_*.mp4`. |
+| `room.html` | The navigation page's recording (scan nav) with the line hidden, camera video `data/cam/nav.mp4` and phosphene videos `data/phos/nav_*.mp4`. `data/room.js` is a copy of `data/navigation.js`. Scan a (1 Nov, internet link, laggy) was used before. |
 | `navigation.html` | Final recording, scan nav, 1 Nov 2026, iPhone over the USB cable, 52.2 s, 2982 frames (about 57 a second). Rebuilt afterwards from the kept frames with `rebuild_monitor.py`, walking line replanned for a 20 cm wide person (469 lines). Camera feed as a 60 fps video `data/cam/nav.mp4`. |
 | `moving.html` | Final recording, scan chair, 1 Nov 2026, iPhone over the USB cable, 12.2 s, the chair pushed across the room. All 387 camera frames that reached the server (about 32 a second). |
 
