@@ -1,6 +1,6 @@
 # tools
 
-Scripts that turn a live SLAMPhosphene scan into a replay data file for the site, and make the poster's QR code. They run on the scanning computer, never on the website.
+Scripts that turn a live SLAMPhosphene scan into a replay data file for the site, and make the poster's QR codes. They run on the scanning computer, never on the website.
 
 ## record_scan.py
 
@@ -24,7 +24,7 @@ Checked on 2026-11-01 against the scannav recording, it gives the same 1731 pose
 
 `python tools/make_qr.py [url]`
 
-Writes `qr/poster-qr.svg` and `qr/poster-qr.png` for the landing page address (default `https://papadopouloslefteris.github.io/phosphene-poster/`), with the highest error correction so a worn print still scans. Use the SVG on the poster. Depends on `segno`.
+Writes `qr/<page>.svg` and `qr/<page>.png` for each replay page (`room.html`, `navigation.html`, `moving.html` under the default site `https://papadopouloslefteris.github.io/phosphene-poster/`), with the highest error correction so a worn print still scans. Use the SVGs on the poster. Depends on `segno`.
 
 ## Documentation maintenance
 

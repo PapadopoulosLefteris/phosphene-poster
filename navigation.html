@@ -4,28 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Navigation While Scanning</title>
-<link rel="stylesheet" href="style.css">
+<meta name="description" content="Replay of a live 3D scan with the walking line the computer planned and sent to the phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-<main class="replay">
-  <canvas id="map" aria-label="3D scan replay, drag to turn, pinch or scroll to zoom"></canvas>
-  <div id="loading" role="status" aria-label="Loading"></div>
-  <div class="top">
-    <a class="icon" href="./" aria-label="Back to all scans"><svg viewBox="0 0 24 24"><path d="M15.4 4.6 8 12l7.4 7.4-1.4 1.4L5.2 12 14 3.2z"/></svg></a>
-    <button id="view-reset" type="button" aria-label="Reset view"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></button>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">&larr; All three replays</a>
+    <h1>The walking line, planned while the room is still being scanned</h1>
+  </header>
+
+  <section class="bench" aria-label="Replay">
+    <div class="map">
+      <div class="stage">
+        <canvas id="map" aria-label="3D view of the scan growing, with the phone's track and the walking line sent to it; drag to turn, scroll or pinch to zoom"></canvas>
+        <div class="loading" id="loading">Loading the scan</div>
+      </div>
+      <div class="legend">
+        <span>Scan in its photo colours</span>
+        <span><i class="sw" style="background:#ff2bd6"></i>Phone and camera view</span>
+        <span><i class="sw" style="background:#39ff14"></i>Line, way clear</span>
+        <span><i class="sw" style="background:#ff8a00"></i>Line, cut short</span>
+        <span><i class="sw" style="background:#ffe600"></i>Track</span>
+        <button id="view-reset" type="button">Reset view</button>
+      </div>
+    </div>
+    <div class="side">
+      <div class="cam"><img id="cam" alt="The phone's camera photo at this moment"><span class="cap">Camera</span></div>
+      <div class="readout" aria-live="off">
+        <div><span>Time</span><b id="r-t">0.0 s</b></div>
+        <div><span>Scan so far</span><b id="r-n">0 dots</b></div>
+        <div><span>Walked</span><b id="r-d">0.0 m</b></div>
+        <div><span>Line</span><b id="r-s">-</b></div>
+        <div><span>Line length</span><b id="r-l">-</b></div>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="follow"> Follow the phone</label>
+        <label><input type="checkbox" id="final"> Show the finished scan underneath</label>
+      </div>
+    </div>
+  </section>
+
+  <div class="transport">
+    <button id="play" type="button">Play</button>
+    <select id="rate" aria-label="Playback speed">
+      <option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option><option value="4">4x</option>
+    </select>
+    <div class="scrub"><div class="ticks" id="ticks"></div><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Position in the scan"></div>
+    <span class="clock" id="clock">0.0 / 0.0 s</span>
   </div>
-  <img id="cam" alt="">
-  <div class="bar">
-    <button id="play" class="paused" type="button" aria-label="Play">
-      <svg class="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>
-      <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
-    </button>
-    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Time">
-  </div>
-</main>
-<script>window.PAGE = { start: 0, line: true };</script>
-<script src="data/navigation.js"></script>
+  <nav class="next" aria-label="Other replays"><a href="room.html">&larr; 1. Scanning a room</a><a href="moving.html">3. Moving objects &rarr;</a></nav>
+</div>
+
+<script>
+window.PAGE = {
+  start: 0, line: true, autoplay: true
+};
+</script>
+<script src="data/navigation.js?v=3"></script>
 <script type="importmap">{"imports": {"three": "./vendor/three.module.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js"}}</script>
-<script type="module" src="viewer.js"></script>
+<script type="module" src="viewer.js?v=3"></script>
 </body>
 </html>
