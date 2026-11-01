@@ -4,7 +4,7 @@
 //
 // PAGE: { start: seconds to begin the clip at (default 0),
 //         line: draw the path line the server sent to the phone (default false),
-//         autoplay: start playing once the scan is loaded (default true),
+//         autoplay: start playing once the scan is loaded and loop until paused (default true),
 //         view: "fit" frames the whole finished scan from above (default), "phone" looks over the phone's shoulder at the clip start,
 //         foot: optional (REPLAY, facts) => text for an element with id foot,
 //         phos: optional { src: "data/phos/<recording>", modes: [[mode, button label], ...] }, phosphene videos
@@ -239,8 +239,7 @@ function loop(now) {
   if (!playing) return;
   const dt = last ? (now - last) / 1000 : 0; last = now;
   const next = cur + dt * +$("rate").value;
-  if (next > T1) { playing = false; show(T1); put("play", "Play again"); return; }
-  show(next);
+  show(next > T1 ? T0 + (next - T1) : next);          // loops back to the start, so the replay runs on its own
   requestAnimationFrame(loop);
 }
 function play() {
